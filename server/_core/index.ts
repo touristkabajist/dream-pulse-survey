@@ -11,6 +11,9 @@ import { serveStatic, setupVite } from "./vite";
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  // Trust exactly one platform reverse proxy. Direct callers cannot spoof
+  // X-Forwarded-For because Express falls back to the socket address.
+  app.set("trust proxy", 1);
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
